@@ -86,7 +86,7 @@ public class GameController {
             view.addNewStickButton("|||||||",0);
             //convertIntStickToButtonList();
             view.updateUIStick();
-            iniListener();
+            view.addStickButtonListener(new StickButtonListener());
             view.setCustomLabelText(" ");
         }
    }

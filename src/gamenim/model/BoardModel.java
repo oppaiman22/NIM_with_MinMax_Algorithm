@@ -35,11 +35,13 @@ public class BoardModel {
     
     public void resetStick(){
         stickNim = new ArrayList<>();
-        stickNim.add(0, 7);
-        for (int i = 1; i < 7; i++) {
+        for (int i = 0; i < 7; i++) {
             stickNim.add(i, 0);
         }
+        stickNim.add(0, 7);
         playerMove = true;
+        playerWin = 0;
+        depth = 0;
         
     }
     //end of myfunction
@@ -56,6 +58,7 @@ public class BoardModel {
             }
         }
         
+        System.out.println(stickNim);
     }
     
     public void performWinCheck(int index){
@@ -81,11 +84,11 @@ public class BoardModel {
     public int evaluate(ArrayList<Integer> list){
         int angka2 = 0;
         int angka1 = 0;
+        
         for (int i = 0; i < list.size(); i++) {
             if (list.get(i) == 1) {
                 angka1++;
-            }
-            
+            } 
             if (list.get(i) == 2) {
                 angka2++;
             }   
@@ -102,7 +105,6 @@ public class BoardModel {
     }
     public int minimax(ArrayList<Integer> list, int depth ,boolean isMax ){
         int score = evaluate(list);
-        System.out.println("depth"+depth);
         if(score == 1 || score == -1)
             return score;
         
@@ -113,7 +115,7 @@ public class BoardModel {
             int best = -999;
             for (int i = 0; i < 7; i++) {
                 if(list.get(i) > 1){
-                    for (int j = 1; j < stickNim.get(i); j++) {
+                    for (int j = 1; j < list.get(i); j++) {
                         ArrayList<Integer> temp = new ArrayList<>(list);
                         list.set(i, list.get(i)-j);
                         list.add(i+1,j);
@@ -127,7 +129,7 @@ public class BoardModel {
             int best = 999;
             for (int i = 0; i < 7; i++) {
                 if(list.get(i) > 1){
-                    for (int j = 1; j < stickNim.get(i); j++) {
+                    for (int j = 1; j < list.get(i); j++) {
                         ArrayList<Integer> temp = new ArrayList<>(list);
                         list.set(i, list.get(i)-j);
                         list.add(i+1,j);
@@ -141,7 +143,7 @@ public class BoardModel {
     }
     public void finBestMove(){
         if(playerWin == 0){
-            int bestVal = -999;
+            int bestVal = -1000;
             int index = 0;
             int stick = 0;
             for (int i = 0; i < 7; i++) {
@@ -152,10 +154,14 @@ public class BoardModel {
                         stickNim.add(i+1, j);
                         int moveVal = minimax(stickNim, depth, false);
                         stickNim = new ArrayList<>(temp);
-
-                        if(moveVal > bestVal){
+                        System.out.println(moveVal);
+                        if(moveVal >= bestVal){
+                            
+                            System.out.println("gamenim.model.BoardModel.finBestMove()"+i);
+                            System.out.println("gamenim.model.BoardModel.finBestMove()"+j);
                             index = i;
                             stick = j;
+                            bestVal = moveVal;
                         }
                     }
                 }
@@ -166,6 +172,7 @@ public class BoardModel {
             performWinCheck(index);
             playerMove  = true;
         }
+        System.out.println(stickNim);
     }
     //end of ai function
 }
